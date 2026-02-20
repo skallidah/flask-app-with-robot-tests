@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Framework Test Target</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1 id="page-title">Robot Framework Test Target</h1>
+        <p id="page-subtitle">A rich DOM playground for automated testing</p>
+    </header>
+
+    <main>
+        <!-- Login Form -->
+        <section id="login-section" class="card">
+            <h2>Login Form</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="remember-me"> Remember me</label>
+                </div>
+                <button type="submit" id="login-btn" class="btn btn-primary">Login</button>
+            </form>
+            <div id="login-message" class="message" style="display:none;"></div>
+        </section>
+
+        <!-- Counter -->
+        <section id="counter-section" class="card">
+            <h2>Counter</h2>
+            <div class="counter-controls">
+                <button id="decrement-btn" class="btn" onclick="changeCounter(-1)">−</button>
+                <span id="counter-value" class="counter-display">0</span>
+                <button id="increment-btn" class="btn" onclick="changeCounter(1)">+</button>
+            </div>
+            <button id="reset-btn" class="btn btn-secondary" onclick="resetCounter()">Reset</button>
+        </section>
+
+        <!-- Dropdowns & Select -->
+        <section id="select-section" class="card">
+            <h2>Dropdowns &amp; Select</h2>
+            <div class="form-group">
+                <label for="color-select">Favorite Color</label>
+                <select id="color-select" onchange="updateColorPreview()">
+                    <option value="">-- Select a color --</option>
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="yellow">Yellow</option>
+                    <option value="purple">Purple</option>
+                </select>
+            </div>
+            <div id="color-preview" class="color-preview" style="display:none;">
+                Selected: <span id="color-name"></span>
+                <div id="color-swatch" class="color-swatch"></div>
+            </div>
+            <div class="form-group">
+                <label for="multi-select">Select Fruits (hold Ctrl/Cmd)</label>
+                <select id="multi-select" multiple size="4">
+                    <option value="apple">Apple</option>
+                    <option value="banana">Banana</option>
+                    <option value="cherry">Cherry</option>
+                    <option value="date">Date</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Checkboxes & Radio Buttons -->
+        <section id="checkbox-radio-section" class="card">
+            <h2>Checkboxes &amp; Radio Buttons</h2>
+            <fieldset>
+                <legend>Interests (checkboxes)</legend>
+                <label><input type="checkbox" name="interest" value="coding" id="chk-coding"> Coding</label>
+                <label><input type="checkbox" name="interest" value="music" id="chk-music"> Music</label>
+                <label><input type="checkbox" name="interest" value="sports" id="chk-sports"> Sports</label>
+                <label><input type="checkbox" name="interest" value="reading" id="chk-reading"> Reading</label>
+            </fieldset>
+            <fieldset>
+                <legend>Experience Level (radio)</legend>
+                <label><input type="radio" name="level" value="beginner" id="radio-beginner"> Beginner</label>
+                <label><input type="radio" name="level" value="intermediate" id="radio-intermediate"> Intermediate</label>
+                <label><input type="radio" name="level" value="expert" id="radio-expert"> Expert</label>
+            </fieldset>
+        </section>
+
+        <!-- Tabs -->
+        <section id="tabs-section" class="card">
+            <h2>Tabs</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tab1" onclick="switchTab('tab1')">Tab 1</button>
+                <button class="tab-btn" data-tab="tab2" onclick="switchTab('tab2')">Tab 2</button>
+                <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">Tab 3</button>
+            </div>
+            <div id="tab1" class="tab-content active">
+                <h3>Tab 1 Content</h3>
+                <p>This is the content of the first tab. It contains some sample text for testing.</p>
+            </div>
+            <div id="tab2" class="tab-content">
+                <h3>Tab 2 Content</h3>
+                <p>This is the second tab. It has different content from the first.</p>
+            </div>
+            <div id="tab3" class="tab-content">
+                <h3>Tab 3 Content</h3>
+                <p>The third tab has its own unique content as well.</p>
+            </div>
+        </section>
+
+        <!-- Accordion -->
+        <section id="accordion-section" class="card">
+            <h2>Accordion</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">Section A</button>
+                    <div class="accordion-body">
+                        <p>Content for Section A. This panel can be expanded and collapsed.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">Section B</button>
+                    <div class="accordion-body">
+                        <p>Content for Section B. Each accordion item works independently.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">Section C</button>
+                    <div class="accordion-body">
+                        <p>Content for Section C. Click the header to toggle visibility.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Table -->
+        <section id="table-section" class="card">
+            <h2>Data Table</h2>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" class="sortable">Name ⇅</th>
+                        <th onclick="sortTable(1)" class="sortable">Age ⇅</th>
+                        <th onclick="sortTable(2)" class="sortable">City ⇅</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Alice</td><td>30</td><td>New York</td><td><button class="btn btn-sm" onclick="deleteRow(this)">Delete</button></td></tr>
+                    <tr><td>Bob</td><td>25</td><td>London</td><td><button class="btn btn-sm" onclick="deleteRow(this)">Delete</button></td></tr>
+                    <tr><td>Charlie</td><td>35</td><td>Paris</td><td><button class="btn btn-sm" onclick="deleteRow(this)">Delete</button></td></tr>
+                    <tr><td>Diana</td><td>28</td><td>Tokyo</td><td><button class="btn btn-sm" onclick="deleteRow(this)">Delete</button></td></tr>
+                    <tr><td>Eve</td><td>32</td><td>Sydney</td><td><button class="btn btn-sm" onclick="deleteRow(this)">Delete</button></td></tr>
+                </tbody>
+            </table>
+            <p id="row-count">Rows: 5</p>
+        </section>
+
+        <!-- Dynamic Content / AJAX -->
+        <section id="dynamic-section" class="card">
+            <h2>Dynamic Content</h2>
+            <div class="form-group">
+                <label for="greet-name">Your Name</label>
+                <input type="text" id="greet-name" placeholder="Enter your name">
+                <button id="greet-btn" class="btn btn-primary" onclick="fetchGreeting()">Greet Me</button>
+            </div>
+            <div id="greeting-result" style="display:none;" class="message message-success"></div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+                <label for="search-input">Search Fruits</label>
+                <input type="text" id="search-input" placeholder="Type to search..." oninput="searchFruits()">
+            </div>
+            <ul id="search-results" class="search-results"></ul>
+
+            <div style="margin-top: 1rem;">
+                <button id="toggle-btn" class="btn btn-secondary" onclick="toggleContent()">Show Hidden Content</button>
+                <div id="hidden-content" style="display:none;" class="message">
+                    <p>This content was hidden and is now visible!</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <button id="delayed-btn" class="btn btn-secondary" onclick="loadDelayed()">Load Delayed Content</button>
+                <div id="delayed-content"></div>
+            </div>
+        </section>
+
+        <!-- Modal Dialog -->
+        <section id="modal-section" class="card">
+            <h2>Modal Dialog</h2>
+            <button id="open-modal-btn" class="btn btn-primary" onclick="openModal()">Open Modal</button>
+        </section>
+
+        <!-- Toast / Notifications -->
+        <section id="toast-section" class="card">
+            <h2>Toast Notifications</h2>
+            <button class="btn btn-success" onclick="showToast('success', 'Operation completed successfully!')">Success Toast</button>
+            <button class="btn btn-danger" onclick="showToast('error', 'Something went wrong!')">Error Toast</button>
+            <button class="btn btn-secondary" onclick="showToast('info', 'Here is some information.')">Info Toast</button>
+        </section>
+
+        <!-- Alerts -->
+        <section id="alert-section" class="card">
+            <h2>Alerts</h2>
+            <div id="alert-success" class="alert alert-success">This is a success alert.</div>
+            <div id="alert-warning" class="alert alert-warning">This is a warning alert.</div>
+            <div id="alert-error" class="alert alert-error">This is an error alert.</div>
+            <button class="btn btn-secondary" onclick="dismissAlert('alert-warning')">Dismiss Warning</button>
+        </section>
+
+        <!-- File Upload -->
+        <section id="upload-section" class="card">
+            <h2>File Upload</h2>
+            <div class="form-group">
+                <label for="file-input">Choose a file</label>
+                <input type="file" id="file-input" onchange="handleFileSelect()">
+            </div>
+            <div id="file-info" style="display:none;" class="message">
+                <p>File: <span id="file-name"></span></p>
+                <p>Size: <span id="file-size"></span></p>
+            </div>
+        </section>
+
+        <!-- Drag and Drop -->
+        <section id="dnd-section" class="card">
+            <h2>Drag and Drop</h2>
+            <div class="dnd-container">
+                <div id="drag-source" class="dnd-zone">
+                    <div class="draggable" draggable="true" id="drag-item-1" ondragstart="dragStart(event)">Item 1</div>
+                    <div class="draggable" draggable="true" id="drag-item-2" ondragstart="dragStart(event)">Item 2</div>
+                    <div class="draggable" draggable="true" id="drag-item-3" ondragstart="dragStart(event)">Item 3</div>
+                </div>
+                <div id="drop-target" class="dnd-zone dnd-target" ondragover="dragOver(event)" ondrop="drop(event)">
+                    <p>Drop items here</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Modal Title</h3>
+                <button id="close-modal-btn" class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This is a modal dialog. You can interact with it and close it.</p>
+                <div class="form-group">
+                    <label for="modal-input">Enter something:</label>
+                    <input type="text" id="modal-input" placeholder="Type here...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" onclick="confirmModal()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script>
+        // Counter
+        let counterValue = 0;
+        function changeCounter(delta) {
+            counterValue += delta;
+            document.getElementById('counter-value').textContent = counterValue;
+        }
+        function resetCounter() {
+            counterValue = 0;
+            document.getElementById('counter-value').textContent = '0';
+        }
+
+        // Color select
+        function updateColorPreview() {
+            const select = document.getElementById('color-select');
+            const preview = document.getElementById('color-preview');
+            const name = document.getElementById('color-name');
+            const swatch = document.getElementById('color-swatch');
+            if (select.value) {
+                preview.style.display = 'block';
+                name.textContent = select.value;
+                swatch.style.backgroundColor = select.value;
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        // Tabs
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Accordion
+        function toggleAccordion(btn) {
+            const item = btn.parentElement;
+            item.classList.toggle('open');
+        }
+
+        // Table sort
+        let sortDirection = {};
+        function sortTable(colIndex) {
+            const table = document.getElementById('data-table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            sortDirection[colIndex] = !sortDirection[colIndex];
+            rows.sort((a, b) => {
+                let aVal = a.cells[colIndex].textContent;
+                let bVal = b.cells[colIndex].textContent;
+                if (!isNaN(aVal) && !isNaN(bVal)) {
+                    aVal = Number(aVal); bVal = Number(bVal);
+                }
+                if (aVal < bVal) return sortDirection[colIndex] ? -1 : 1;
+                if (aVal > bVal) return sortDirection[colIndex] ? 1 : -1;
+                return 0;
+            });
+            rows.forEach(r => tbody.appendChild(r));
+        }
+
+        function deleteRow(btn) {
+            btn.closest('tr').remove();
+            const count = document.querySelectorAll('#data-table tbody tr').length;
+            document.getElementById('row-count').textContent = `Rows: ${count}`;
+        }
+
+        // Login form
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
+                const msgEl = document.getElementById('login-message');
+                msgEl.style.display = 'block';
+                msgEl.textContent = data.message;
+                msgEl.className = 'message ' + (data.success ? 'message-success' : 'message-error');
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Greeting
+        async function fetchGreeting() {
+            const name = document.getElementById('greet-name').value;
+            const res = await fetch('/api/greet', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name})
+            });
+            const data = await res.json();
+            const el = document.getElementById('greeting-result');
+            el.textContent = data.greeting;
+            el.style.display = 'block';
+        }
+
+        // Search
+        async function searchFruits() {
+            const query = document.getElementById('search-input').value;
+            const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            const ul = document.getElementById('search-results');
+            ul.innerHTML = data.results.map(r => `<li>${r}</li>`).join('');
+        }
+
+        // Toggle content
+        function toggleContent() {
+            const el = document.getElementById('hidden-content');
+            const btn = document.getElementById('toggle-btn');
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+                btn.textContent = 'Hide Content';
+            } else {
+                el.style.display = 'none';
+                btn.textContent = 'Show Hidden Content';
+            }
+        }
+
+        // Delayed content
+        function loadDelayed() {
+            const el = document.getElementById('delayed-content');
+            el.innerHTML = '<p class="loading">Loading...</p>';
+            setTimeout(() => {
+                el.innerHTML = '<p id="delayed-text" class="message message-success">Delayed content loaded!</p>';
+            }, 2000);
+        }
+
+        // Modal
+        function openModal() {
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+        function closeModal(e) {
+            if (!e || e.target === document.getElementById('modal-overlay')) {
+                document.getElementById('modal-overlay').style.display = 'none';
+            }
+        }
+        function confirmModal() {
+            const val = document.getElementById('modal-input').value;
+            showToast('success', `Modal confirmed with: "${val}"`);
+            closeModal();
+        }
+
+        // Toast
+        function showToast(type, message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Alerts
+        function dismissAlert(id) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        }
+
+        // File upload
+        function handleFileSelect() {
+            const input = document.getElementById('file-input');
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('file-size').textContent = (file.size / 1024).toFixed(2) + ' KB';
+                document.getElementById('file-info').style.display = 'block';
+            }
+        }
+
+        // Drag and drop
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+        }
+        function dragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        function drop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const id = e.dataTransfer.getData('text/plain');
+            const el = document.getElementById(id);
+            if (el) e.currentTarget.appendChild(el);
+        }
+    </script>
+</body>
+</html>

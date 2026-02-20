@@ -1,0 +1,51 @@
+name: Robot Framework Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  APP_URL: ${{ vars.APP_URL || 'http://localhost:5000' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Start app (if testing locally)
+        if: env.APP_URL == 'http://localhost:5000'
+        run: |
+          python app.py &
+          sleep 3
+
+      - name: Run Robot Framework tests
+        run: |
+          robot --variable URL:${{ env.APP_URL }} --outputdir results tests/
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-results
+          path: results/
