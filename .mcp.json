@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kaneai-to-robot": {
+      "command": "python",
+      "args": ["mcp-server/server.py"],
+      "env": {
+        "PROJECT_ROOT": "/Users/sriramk/Demo/claude/python-robot-demo"
+      }
+    }
+  }
+}

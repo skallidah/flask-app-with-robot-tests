@@ -3,5 +3,9 @@ __pycache__/
 venv/
 .env
 results/
+output.xml
+log.html
+report.html
+selenium-screenshot-*.png
 *.swp
 *.swo
