@@ -2,7 +2,7 @@
 
 ## Exercise Overview
 
-This exercise demonstrates a complete AI-assisted test automation pipeline — from building a web application, to generating and migrating test scripts using multiple AI tools, to deploying with CI/CD. The workflow integrates **Claude Code**, **TestMu AI's KaneAI**, **Robot Framework**, **Railway**, and **GitHub Actions** into a cohesive development and testing lifecycle.
+This exercise demonstrates a complete AI-assisted test automation pipeline — from building a web application with automated tests, to generating and migrating test scripts using AI tools, to deploying with CI/CD. The workflow integrates **TestMu AI's KaneAI**, **Robot Framework**, **Railway**, **MCP**, and **GitHub Actions** into a cohesive development and testing lifecycle.
 
 ---
 
@@ -10,80 +10,79 @@ This exercise demonstrates a complete AI-assisted test automation pipeline — f
 
 ```mermaid
 graph TB
-    subgraph "Development & AI Tools"
-        CC["Claude Code<br/>(AI Pair Programmer)"]
-        KAI["TestMu AI / KaneAI<br/>(AI Test Generator)"]
+    subgraph "Web Application"
+        APP["Python Flask Web App"]
     end
 
-    subgraph "Source Code (GitHub)"
-        APP["Flask Web App<br/>app.py + templates/"]
-        RF["Robot Framework Tests<br/>tests/*.robot"]
-        MCP["MCP Server<br/>mcp-server/server.py"]
-        KS["KaneAI Scripts<br/>kane-ai-generated/*.py"]
-        CI["GitHub Actions<br/>.github/workflows/test.yml"]
-        REQ["Requirements Doc<br/>REQUIREMENTS.md"]
+    subgraph "Test Automation"
+        RF["Robot Framework Tests<br/>(SeleniumLibrary)"]
+        KAI["KaneAI<br/>(AI Test Generator)"]
+        MCP["MCP Server<br/>(Script Migration)"]
+        KS["KaneAI Generated Scripts<br/>(Selenium/Python)"]
     end
 
-    subgraph "Deployment"
-        RW["Railway<br/>(Cloud PaaS)"]
-        LIVE["Live App<br/>web-production-f7853.up.railway.app"]
+    subgraph "Infrastructure"
+        GH["GitHub<br/>(Source Code)"]
+        RW["Railway<br/>(Cloud Hosting)"]
+        GA["GitHub Actions<br/>(CI/CD)"]
+        JIRA["JIRA<br/>(Requirements)"]
     end
 
-    subgraph "Test Execution"
-        LOCAL["Local Robot Tests<br/>(22 tests, headless Chrome)"]
-        GHCI["GitHub Actions CI<br/>(22 tests, headless Chrome)"]
-    end
+    APP -->|"Host publicly"| RW
+    APP -->|"Push code"| GH
+    RF -->|"Push tests"| GH
+    JIRA -->|"Requirements"| KAI
+    KAI -->|"Generates"| KS
+    KS -->|"Migrated by"| MCP
+    MCP -->|"Outputs"| RF
+    GH -->|"Triggers"| GA
+    GA -->|"Runs tests on"| RW
 
-    CC -->|"1. Generates"| APP
-    CC -->|"2. Generates"| RF
-    CC -->|"3. Generates"| REQ
-    REQ -->|"4. Input to"| KAI
-    KAI -->|"5. Generates"| KS
-    CC -->|"6. Builds"| MCP
-    MCP -->|"7. Migrates"| KS
-    MCP -->|"8. Outputs"| RF
-    APP -->|"9. Deploys via"| RW
-    RW -->|"10. Serves"| LIVE
-    LIVE -->|"11. Test target"| LOCAL
-    LIVE -->|"12. Test target"| GHCI
-    CI -->|"Orchestrates"| GHCI
-
-    style CC fill:#6366f1,color:#fff
+    style APP fill:#6366f1,color:#fff
     style KAI fill:#f59e0b,color:#fff
     style RW fill:#0ea5e9,color:#fff
     style MCP fill:#10b981,color:#fff
-    style LIVE fill:#0ea5e9,color:#fff
+    style GH fill:#333,color:#fff
+    style GA fill:#8b5cf6,color:#fff
+    style JIRA fill:#0052CC,color:#fff
+    style RF fill:#22c55e,color:#fff
 ```
 
 ## Flow Diagram
 
 ```mermaid
-flowchart LR
-    A["1 Build Flask App<br/>(Claude Code)"] --> B["2 Write Robot Tests<br/>(Claude Code)"]
-    B --> C["3 Deploy to Railway"]
-    C --> D["4 Write Requirements Doc<br/>(Claude Code)"]
-    D --> E["5 Generate Tests<br/>(KaneAI)"]
-    E --> F["6 Build MCP Server<br/>(Claude Code)"]
-    F --> G["7 Migrate KaneAI → Robot"]
-    G --> H["8 Run All Tests<br/>(22/22 Pass)"]
-    H --> I["9 Push & CI/CD<br/>(GitHub Actions)"]
+flowchart TD
+    A["1. Build Python Flask Web App<br/>with Robot Framework tests"] --> B["2. Test locally and deploy<br/>to Railway for public access"]
+    B --> C["3. Push code to GitHub with<br/>GitHub Actions CI pipeline"]
+    C --> D["4. Verify everything works<br/>end-to-end"]
+    D --> E["5. Add requirements document<br/>to JIRA"]
+    E --> F["6. Set up KaneAI-to-JIRA<br/>integration on TestMu AI"]
+    F --> G["7. Link JIRA ID in KaneAI Agent<br/>and generate test scenarios"]
+    G --> H["8. KaneAI generates test scenarios,<br/>steps, and Selenium/Python scripts"]
+    H --> I["9. Download KaneAI scripts<br/>and push to GitHub repo"]
+    I --> J["10. Build MCP server to migrate<br/>KaneAI scripts to Robot Framework"]
+    J --> K["11. Test migrated scripts locally<br/>and push to GitHub"]
+    K --> L["12. Run all Robot tests on Railway<br/>via GitHub Actions and verify"]
 
     style A fill:#6366f1,color:#fff
     style B fill:#6366f1,color:#fff
-    style C fill:#0ea5e9,color:#fff
-    style D fill:#6366f1,color:#fff
-    style E fill:#f59e0b,color:#fff
-    style F fill:#10b981,color:#fff
-    style G fill:#10b981,color:#fff
-    style H fill:#22c55e,color:#fff
-    style I fill:#8b5cf6,color:#fff
+    style C fill:#333,color:#fff
+    style D fill:#22c55e,color:#fff
+    style E fill:#0052CC,color:#fff
+    style F fill:#f59e0b,color:#fff
+    style G fill:#f59e0b,color:#fff
+    style H fill:#f59e0b,color:#fff
+    style I fill:#333,color:#fff
+    style J fill:#10b981,color:#fff
+    style K fill:#22c55e,color:#fff
+    style L fill:#8b5cf6,color:#fff
 ```
 
 ## MCP Server Architecture
 
 ```mermaid
 graph LR
-    subgraph "Claude Code (MCP Host)"
+    subgraph "MCP Host"
         AI["AI Assistant"]
     end
 
@@ -127,12 +126,12 @@ flowchart TD
     B --> C{"Parse Step Comments<br/># Step - N : description"}
     C --> D["Extract: navigate, input,<br/>click, assert, verify steps"]
     D --> E["MCP: migrate_to_robot"]
-    E --> F["Map Selenium calls →<br/>SeleniumLibrary keywords"]
-    F --> G["Map element descriptions →<br/>HTML id locators"]
-    G --> H["Map assertions →<br/>Robot Framework assertions"]
+    E --> F["Map Selenium calls to<br/>SeleniumLibrary keywords"]
+    F --> G["Map element descriptions to<br/>HTML id locators"]
+    G --> H["Map assertions to<br/>Robot Framework assertions"]
     H --> I["Reuse resources.robot<br/>shared keywords"]
     I --> J["Generate .robot file<br/>in tests/ folder"]
-    J --> K["Run with Robot Framework<br/>✅ All tests pass"]
+    J --> K["Run with Robot Framework<br/>All tests pass"]
 
     style A fill:#f59e0b,color:#fff
     style B fill:#10b981,color:#fff
@@ -147,13 +146,13 @@ flowchart TD
 
 | Component | Files | Purpose |
 |-----------|-------|---------|
-| **Flask Web App** | `app.py`, `templates/index.html`, `static/style.css` | Single-page app with 16 interactive UI sections (login, counter, tabs, modal, drag-and-drop, etc.) and 3 API endpoints |
+| **Flask Web App** | `app.py`, `templates/index.html`, `static/style.css` | Single-page app with 16 interactive UI sections and 3 API endpoints |
 | **Robot Framework Tests** | `tests/web_tests.robot`, `tests/resources.robot` | 20 browser automation tests using SeleniumLibrary with shared keywords |
-| **Requirements Doc** | `REQUIREMENTS.md` | 16 features, 50+ acceptance criteria — input for KaneAI test generation |
+| **Requirements Doc** | `REQUIREMENTS.md` | 16 features, 50+ acceptance criteria for KaneAI test generation |
 | **KaneAI Scripts** | `kane-ai-generated/*.py` | 2 Selenium/Python test scripts generated by TestMu AI's KaneAI |
-| **MCP Server** | `mcp-server/server.py`, `.mcp.json` | 4-tool MCP server that analyzes and migrates KaneAI scripts to Robot Framework |
-| **Migrated Tests** | `tests/kaneai_login_test_positive.robot`, `tests/kaneai_login_test_negative.robot` | 2 Robot Framework tests converted from KaneAI output |
-| **Deployment** | `Procfile`, `railway.json` | Railway PaaS deployment config |
+| **MCP Server** | `mcp-server/server.py`, `.mcp.json` | 4-tool MCP server that migrates KaneAI scripts to Robot Framework |
+| **Migrated Tests** | `tests/kaneai_login_test_*.robot` | 2 Robot Framework tests converted from KaneAI output |
+| **Deployment** | `Procfile`, `railway.json` | Railway cloud deployment config |
 | **CI/CD** | `.github/workflows/test.yml` | GitHub Actions running all 22 tests against deployed app |
 
 ## Key Metrics
@@ -172,12 +171,12 @@ flowchart TD
 
 | Category | Tool | Role |
 |----------|------|------|
-| AI Code Generation | **Claude Code** | Built the entire app, tests, MCP server, and deployment config |
 | AI Test Generation | **TestMu AI / KaneAI** | Generated Selenium/Python test scripts from requirements |
 | Test Framework | **Robot Framework** + SeleniumLibrary | Browser automation and test execution |
 | Web Framework | **Flask** (Python) | Served the test target web application |
 | Cloud Deployment | **Railway** | Hosted the app publicly |
 | CI/CD | **GitHub Actions** | Automated test execution on every push |
-| Protocol | **MCP (Model Context Protocol)** | Connected Claude Code to custom migration tooling |
+| Protocol | **MCP (Model Context Protocol)** | Migration tooling for KaneAI → Robot Framework |
 | Browser Automation | **Selenium** + Chrome/ChromeDriver | Drove headless browser for tests |
+| Project Management | **JIRA** | Requirements and test case management |
 | Version Control | **Git** + GitHub | Source code management |
