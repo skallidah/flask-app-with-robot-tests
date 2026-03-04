@@ -2,13 +2,10 @@ name: Robot Framework Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, ui/add-colors]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
-env:
-  APP_URL: ${{ vars.APP_URL || 'http://localhost:5000' }}
 
 jobs:
   test:
@@ -16,6 +13,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set APP_URL based on branch
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "APP_URL=${{ vars.APP_URL || 'http://localhost:5000' }}" >> $GITHUB_ENV
+          else
+            echo "APP_URL=${{ vars.APP_URL_STAGING || 'http://localhost:5000' }}" >> $GITHUB_ENV
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -47,5 +52,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: robot-results
+          name: robot-results-${{ github.ref_name }}
           path: results/
