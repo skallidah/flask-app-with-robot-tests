@@ -1,0 +1,12 @@
+# LambdaTest Configuration
+
+# Project and folder configuration
+project_id: "01KK7YVSSKHWSZV7HEDR6QNFMK"
+folder_id: "01KMHWY6M5B2S9CR2D4Q3S2DHD"
+
+# Test Run configuration
+assignee: 3007853
+environment_id: 244617
+
+# Test URL for automation
+test_url: "web-production-f7853.up.railway.app"
